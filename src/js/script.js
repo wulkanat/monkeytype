@@ -1,3 +1,6 @@
+import { fetchRandomWikipediaQuote } from "../../static/wikipedia/wikipedia";
+import { fetchRandomGist } from "../../static/wikipedia/github";
+
 let wordsList = [];
 let currentWordIndex = 0;
 let currentWordElementIndex = 0;
@@ -644,29 +647,42 @@ async function initWords() {
   } else if (config.mode == "quote") {
     let group = config.quoteLength;
 
-    if (config.quoteLength === -1) {
-      group = Math.floor(Math.random() * quotes.groups.length);
-      while (quotes.groups[group].length === 0) {
-        group = Math.floor(Math.random() * quotes.groups.length);
-      }
-    } else {
-      if (quotes.groups[group].length === 0) {
-        Notifications.add("No quotes found for selected quote length", 0);
-        return;
-      }
-    }
+    // if (true) {
+    // wikipedia quote
+    // const quote = await fetchRandomWikipediaQuote("en");
+    const quote = await fetchRandomGist("HTML");
 
-    let rq =
-      quotes.groups[group][
-        Math.floor(Math.random() * quotes.groups[group].length)
-      ];
-    if (randomQuote != null && rq.id === randomQuote.id) {
-      rq =
+    randomQuote = {
+      text: quote.quote,
+      source: `Wikipedia: ${quote.title}`,
+      length: -1,
+      id: quote.id,
+    };
+    /*} else {
+      if (config.quoteLength === -1) {
+        group = Math.floor(Math.random() * quotes.groups.length);
+        while (quotes.groups[group].length === 0) {
+          group = Math.floor(Math.random() * quotes.groups.length);
+        }
+      } else {
+        if (quotes.groups[group].length === 0) {
+          Notifications.add("No quotes found for selected quote length", 0);
+          return;
+        }
+      }
+
+      let rq =
         quotes.groups[group][
           Math.floor(Math.random() * quotes.groups[group].length)
-        ];
-    }
-    randomQuote = rq;
+          ];
+      if (randomQuote != null && rq.id === randomQuote.id) {
+        rq =
+          quotes.groups[group][
+            Math.floor(Math.random() * quotes.groups[group].length)
+            ];
+      }
+      randomQuote = rq;
+    }*/
     randomQuote.text = randomQuote.text.replace(/ +/gm, " ");
     randomQuote.text = randomQuote.text.replace(/\\\\t/gm, "\t");
     randomQuote.text = randomQuote.text.replace(/\\\\n/gm, "\n");
